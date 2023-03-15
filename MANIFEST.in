@@ -1,0 +1,4 @@
+include LICENSE
+include Containerfile
+graft tests
+graft py_deep_learning
