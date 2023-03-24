@@ -26,7 +26,8 @@ class DNN():
     def think(self, inputs, training : bool = False):
         output = self.sigmoid(dot(array(inputs), self.layers))
         if training:
-            adjustment = dot(array(inputs).T, self.learning_rate * self.sigmoid_derivative(output))
+            error = array(inputs) - output
+            adjustment = dot(array(inputs).T, self.learning_rate * error * self.sigmoid_derivative(output))
             self.layers += adjustment
         return output
 
