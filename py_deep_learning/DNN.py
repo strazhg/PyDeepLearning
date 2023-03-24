@@ -33,7 +33,7 @@ class DNN():
     def save_model(self, name : str):
         save(name, self.layers)        
 
-    def learn(self, inputs, learning_rate, iterations):
+    def learn(self, inputs, iterations):
         for i in range(iterations):
             output = self.think(inputs, True)
             print('{} / {} iterations with output -> {}'.format(i + 1, iterations, output))
