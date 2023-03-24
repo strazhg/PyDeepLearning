@@ -24,10 +24,10 @@ class DNN():
         return x * (1 - x)
 
     def think(self, inputs, training : bool = False):
-        output = self.sigmoid(dot(array(inputs), self.layers))
+        output = self.sigmoid(dot(inputs, self.layers))
         if training:
             error = array(inputs) - output
-            adjustment = dot(array(inputs).T, self.learning_rate * error * self.sigmoid_derivative(output))
+            adjustment = dot(inputs, self.learning_rate * error * self.sigmoid_derivative(output))
             self.layers += adjustment
         return output
 
