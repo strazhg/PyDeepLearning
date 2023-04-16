@@ -1,6 +1,9 @@
 import numpy as np
+import os
 
 class DNN():
+    def __init__():
+        self.layers = []
     # activation function
     def sigmoid(self, x):
         return(1/(1 + np.exp(-x)))
@@ -19,11 +22,12 @@ class DNN():
         return(a)
 
     # initializing the weights randomly
-    def __init__(self, shape : tuple[int, int]):
-        self.layers = []
+    def add_layer(self, shape : tuple[int, int]):
+        layer = []
         for i in range(shape[0] * shape[1]):
-            self.layers.append(np.random.randn())
-        self.layers = np.array(self.layers).reshape(x, y)
+            layer.append(np.random.randn())
+        layer = np.array(self.layers).reshape(shape)
+        self.layers.append(layer)
         
     # for loss we will be using mean square error(MSE)
     def loss(self, out, Y):
