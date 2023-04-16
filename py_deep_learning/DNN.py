@@ -1,41 +1,65 @@
-from numpy import exp, array, random, dot, save, load
-import os
-
-from .Layers import *
+import numpy as np
 
 class DNN():
-    def __init__(self, name : str, learning_rate : float):
-        self.learning_rate = learning_rate
-        random.seed(1)
-        if os.path.exists(name):
-            self.layers = load(name, allow_pickle=True)
-        else:
-            self.shape = tuple()
-            self.layers = 2 * random.random(self.shape) - 1
-
-    def add_layer(self, layer : Input):
-        self.shape += layer.shape
-        self.layers = 2 * random.random(self.shape) - 1
-
+    # activation function
     def sigmoid(self, x):
-        return 1 / (1 + exp(-x))
+        return(1/(1 + np.exp(-x)))
 
-    def sigmoid_derivative(self, x):
-        return x * (1 - x)
+    # Creating the Feed forward neural network
+    # 1 Input layer(1, 30)
+    # 1 hidden layer (1, 5)
+    # 1 output layer(3, 3)
 
-    def think(self, inputs, training : bool = False):
-        output = self.sigmoid(dot(inputs, self.layers))
-        if training:
-            error = array(inputs) - output
-            adjustment = dot(array(inputs).T, self.learning_rate * error * self.sigmoid_derivative(output))
-            self.layers += adjustment
-        return output
+    def f_forward(self, x):
+        # Output
+        for layer in self.layers:
+            z = x.dot(layer)# input from layer
+            a = self.sigmoid(z)# output of layer
+        
+        return(a)
 
-    def save_model(self, name : str):
-        save(name, self.layers)        
+    # initializing the weights randomly
+    def __init__(self, x, y):
+        self.layers = []
+        for i in range(x * y):
+            self.layers.append(np.random.randn())
+        self.layers = np.array(self.layers).reshape(x, y)
+        
+    # for loss we will be using mean square error(MSE)
+    def loss(self, out, Y):
+        s = (np.square(out-Y))
+        s = np.sum(s)/len(Y)
+        return(s)
 
-    def learn(self, inputs, iterations):
-        for i in range(iterations):
-            output = self.think(inputs, True)
-            print('{} / {} iterations with output -> {}'.format(i + 1, iterations, output))
-        return self
+    # Back propagation of error
+    def back_prop(self, x, y, alpha):
+        
+        # Output layer
+        for layer in self.layers:
+            z = x.dot(layer)# input from layer
+            a = self.sigmoid(z)# output of layer
+        
+            # error in output layer
+            d2 =(a-y)
+            d1 = np.multiply((layer.dot((d2.transpose()))).transpose(),
+                                        (np.multiply(a, 1-a)))
+
+            # Gradient for w1 and w2
+            layer_adj = x.transpose().dot(d1)
+            
+            # Updating parameters
+            layer = layer-(alpha*(layer_adj))
+
+    def train(self, Y, alpha = 0.01, epoch = 10):
+        acc =[]
+        loss =[]
+        for j in range(epoch):
+            l = []
+            for i in range(len(self.layers)):
+                out = self.f_forward(self.layers[i])
+                l.append((self.loss(out, Y[i])))
+                self.back_prop(self.layers[i], Y[i], alpha)
+            print("epochs:", j + 1, "======== acc:", (1-(sum(l)/len(self.layers)))*100)
+            acc.append((1-(sum(l)/len(self.layers)))*100)
+            loss.append(sum(l)/len(self.layers))
+        return(acc, loss, self.layers)
