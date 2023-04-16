@@ -19,9 +19,9 @@ class DNN():
         return(a)
 
     # initializing the weights randomly
-    def __init__(self, x, y):
+    def __init__(self, shape : tuple[int, int]):
         self.layers = []
-        for i in range(x * y):
+        for i in range(shape[0] * shape[1]):
             self.layers.append(np.random.randn())
         self.layers = np.array(self.layers).reshape(x, y)
         
