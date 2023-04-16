@@ -8,12 +8,7 @@ class DNN():
     # activation function
     def sigmoid(self, x):
         return(1/(1 + np.exp(-x)))
-
-    # Creating the Feed forward neural network
-    # 1 Input layer(1, 30)
-    # 1 hidden layer (1, 5)
-    # 1 output layer(3, 3)
-
+    
     def f_forward(self, x):
         # Output
         for layer in self.layers:
