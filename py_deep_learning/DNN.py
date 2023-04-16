@@ -4,6 +4,7 @@ import os
 class DNN():
     def __init__():
         self.layers = []
+    
     # activation function
     def sigmoid(self, x):
         return(1/(1 + np.exp(-x)))
