@@ -22,7 +22,7 @@ class DNN():
         layer = []
         for i in range(shape[0] * shape[1]):
             layer.append(np.random.randn())
-        layer = np.array(self.layers).reshape(shape)
+        layer = np.array(layer).reshape(shape)
         self.layers.append(layer)
         
     # for loss we will be using mean square error(MSE)
