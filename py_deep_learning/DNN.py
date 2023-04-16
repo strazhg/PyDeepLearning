@@ -2,7 +2,7 @@ import numpy as np
 import os
 
 class DNN():
-    def __init__():
+    def __init__(self):
         self.layers = []
     
     # activation function
