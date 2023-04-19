@@ -55,10 +55,9 @@ class DNN():
         loss =[]
         for j in range(epoch):
             l = []
-            for i in range(len(self.layers)):
-                out = self.f_forward(self.layers[i])
-                l.append((self.loss(out, Y[i])))
-                self.back_prop(self.layers[i], Y[i], alpha)
+            out = self.f_forward(self.layers)
+            l = self.loss(out, Y))
+            self.back_prop(l, Y, alpha)
             print("epochs:", j + 1, "======== acc:", (1-(sum(l)/len(self.layers)))*100)
             acc.append((1-(sum(l)/len(self.layers)))*100)
             loss.append(sum(l)/len(self.layers))
