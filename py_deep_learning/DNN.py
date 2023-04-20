@@ -26,7 +26,7 @@ class DNN():
     # for loss we will be using mean square error(MSE)
     def loss(self, out, Y):
         s = (np.square(out-Y))
-        s = np.sum(s)/len(Y)
+        s = s.mean()
         return(s)
 
     # Back propagation of error
