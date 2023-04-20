@@ -53,7 +53,7 @@ class DNN():
         out = 0
         for i in range(len(self.layers)):
             out = self.f_forward(np.asarray(self.layers[i]))
-            l.append(self.loss(out, Y[i]))
+            l.append(self.loss(out, Y))
             self.back_prop(np.asarray(l[i]), Y, alpha)
         return out
 
