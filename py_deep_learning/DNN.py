@@ -20,7 +20,7 @@ class DNN():
 
     # initializing the weights randomly
     def add_layer(self, shape : tuple[int, int]):
-        layer = 2 * np.random.randn(shape[0], shape[1]) - 1
+        layer = 2 * np.random.random(shape) - 1
         self.layers.append(layer)
         
     # for loss we will be using mean square error(MSE)
@@ -52,7 +52,7 @@ class DNN():
         acc =[]
         loss =[]
         for j in range(epoch):
-            out = self.f_forward(np.array(Y))
+            out = self.f_forward(np.array(self.layers))
             l = self.loss(out, Y)
             self.back_prop(l, Y, alpha)
             print("epochs:", j + 1, "======== acc:", (1-(sum(l)/len(self.layers)))*100)
