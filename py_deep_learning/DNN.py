@@ -13,7 +13,7 @@ class DNN():
     def f_forward(self, x):
         # Output
         for layer in self.layers:
-            z = x.dot(layer.T)# input from layer
+            z = x.dot(layer)# input from layer
             a = self.sigmoid(z)# output of layer
         
         return(a)
