@@ -4,6 +4,7 @@ import os
 class DNN():
     def __init__(self):
         self.layers = []
+        np.random.seed(1)
     
     # activation function
     def sigmoid(self, x):
@@ -18,11 +19,8 @@ class DNN():
         return(a)
 
     # initializing the weights randomly
-    def add_layer(self, shape : tuple[int, int]):
-        layer = []
-        for i in range(shape[0] * shape[1]):
-            layer.append(np.random.randn())
-        layer = np.array(layer).reshape(shape)
+    def add_layer(self, shape : tuple):
+        layer = 2 * np.random.random(shape) - 1
         self.layers.append(layer)
         
     # for loss we will be using mean square error(MSE)
