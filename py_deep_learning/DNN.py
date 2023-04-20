@@ -47,6 +47,15 @@ class DNN():
             
             # Updating parameters
             layer = layer-(alpha*(layer_adj))
+    
+    def think(self, Y, alpha = 0.01):
+        l = []
+        out = 0
+        for i in range(len(self.layers)):
+            out = self.f_forward(np.asarray(self.layers[i]))
+            l.append(self.loss(out, Y[i]))
+            self.back_prop(np.asarray(l[i]), Y, alpha)
+        return out
 
     def train(self, Y, alpha = 0.01, epoch = 10):
         acc =[]
