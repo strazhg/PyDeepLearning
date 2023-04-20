@@ -19,8 +19,8 @@ class DNN():
         return(a)
 
     # initializing the weights randomly
-    def add_layer(self, shape : tuple):
-        layer = np.random.randn(shape)
+    def add_layer(self, shape : tuple[int, int]):
+        layer = 2 * np.random.randn(shape[0], shape[1]) - 1
         self.layers.append(layer)
         
     # for loss we will be using mean square error(MSE)
