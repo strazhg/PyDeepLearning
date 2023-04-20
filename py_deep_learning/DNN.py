@@ -13,7 +13,7 @@ class DNN():
     def f_forward(self, x):
         # Output
         for layer in self.layers:
-            z = x.dot(layer, out=None)# input from layer
+            z = x.dot(layer)# input from layer
             a = self.sigmoid(z)# output of layer
         
         return(a)
@@ -34,7 +34,7 @@ class DNN():
         
         # Output layer
         for layer in self.layers:
-            z = x.dot(layer, out=None)# input from layer
+            z = x.dot(layer)# input from layer
             a = self.sigmoid(z)# output of layer
         
             # error in output layer
@@ -54,7 +54,7 @@ class DNN():
         for j in range(epoch):
             l = []
             for i in range(len(self.layers)):
-                out = self.f_forward(np.asarray(self.layers[i]))
+                out = self.f_forward(np.squeeze(np.asarray(self.layers[i])))
                 l.append(self.loss(out, Y))
                 self.back_prop(l[i], Y, alpha)
             print("epochs:", j + 1, "======== acc:", (1-(sum(l)/len(self.layers)))*100)
