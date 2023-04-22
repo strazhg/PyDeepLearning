@@ -55,7 +55,7 @@ class DNN():
             out = self.f_forward(np.asarray(self.layers[i]).T)
             l.append(self.loss(out, Y))
             self.back_prop(np.asarray(l[i]), Y, alpha)
-        accuracy = (1-(sum(l)/len(self.layers)))*100
+        accuracy = (1-(sum(l)/len(self.layers)))
         return out, accuracy
 
     def train(self, Y, alpha = 0.01, epoch = 10):
