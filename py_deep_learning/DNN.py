@@ -48,13 +48,12 @@ class DNN():
             # Updating parameters
             layer = layer-(alpha*(layer_adj))
     
-    def think(self, Y, alpha = 0.01):
+    def think(self, Y):
         l = []
         out = 0
         for i in range(len(self.layers)):
-            out = self.f_forward(np.asarray(self.layers[i]).T)
+            out = self.f_forward(np.asarray(self.layers[i]))
             l.append(self.loss(out, Y))
-            self.back_prop(np.asarray(l[i]), Y, alpha)
         accuracy = (1-(sum(l)/len(self.layers)))
         return out, accuracy
 
