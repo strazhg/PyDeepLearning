@@ -1,72 +1,57 @@
-import numpy as np
-import os
+from numpy import exp, array, random, dot
+
 
 class DNN():
     def __init__(self):
-        self.layers = []
-        np.random.seed(1)
+        # Seed the random number generator, so it generates the same numbers
+        # every time the program runs.
+        random.seed(1)
+
+        # We model a single neuron, with 3 input connections and 1 output connection.
+        # We assign random weights to a 3 x 1 matrix, with values in the range -1 to 1
+        # and mean 0.
+        self.synaptic_weights = []
     
-    # activation function
-    def sigmoid(self, x):
-        return(1/(1 + np.exp(-x)))
-    
-    def f_forward(self, x):
-        # Output
-        for layer in self.layers:
-            z = x.dot(layer)# input from layer
-            a = self.sigmoid(z)# output of layer
-        
-        return(a)
+    def add(self, shape : tuple):
+        self.synaptic_weights.append(2 * random.random(shape) - 1)
+    # The Sigmoid function, which describes an S shaped curve.
+    # We pass the weighted sum of the inputs through this function to
+    # normalise them between 0 and 1.
+    def __sigmoid(self, x):
+        return 1 / (1 + exp(-x))
 
-    # initializing the weights randomly
-    def add_layer(self, shape : tuple[int, int]):
-        layer = 2 * np.random.random(shape) - 1
-        self.layers.append(layer)
-        
-    # for loss we will be using mean square error(MSE)
-    def loss(self, out, Y):
-        s = (np.square(out-Y))
-        s = s.mean()
-        return(s)
+    # The derivative of the Sigmoid function.
+    # This is the gradient of the Sigmoid curve.
+    # It indicates how confident we are about the existing weight.
+    def __sigmoid_derivative(self, x):
+        return x * (1 - x)
 
-    # Back propagation of error
-    def back_prop(self, x, y, alpha):
-        
-        # Output layer
-        for layer in self.layers:
-            z = x.dot(layer)# input from layer
-            a = self.sigmoid(z)# output of layer
-        
-            # error in output layer
-            d2 =(a-y)
-            d1 = np.multiply((layer.dot((d2.transpose()))).transpose(),
-                                        (np.multiply(a, 1-a)))
+    # We train the neural network through a process of trial and error.
+    # Adjusting the synaptic weights each time.
+    def train(self, training_set_inputs, number_of_training_iterations):
+        for iteration in range(number_of_training_iterations):
+            # Pass the training set through our neural network (a single neuron).
+            output = self.think(training_set_inputs, 0.01, training=True)
 
-            # Gradient for w1 and w2
-            layer_adj = x.transpose().dot(d1)
-            
-            # Updating parameters
-            layer = layer-(alpha*(layer_adj))
-    
-    def think(self, Y):
-        l = []
-        out = 0
-        for i in range(len(self.layers)):
-            out = self.f_forward(np.asarray(self.layers[i]))
-            l.append(self.loss(out, Y))
-        accuracy = (1-(sum(l)/len(self.layers)))
-        return out, accuracy
+    # The neural network thinks.
+    def think(self, inputs, learning_rate : float, training : bool):
+        # Pass inputs through our neural network.
+        output = self.__sigmoid(dot(inputs, self.synaptic_weights[0]))
+        for i in range(1, len(self.synaptic_weights)):
+            output = self.__sigmoid(dot(output, self.synaptic_weights[i]))
+        
+        if training:
+            # Calculate the error (The difference between the desired output
+            # and the predicted output).
+            error = inputs - output
 
-    def train(self, Y, alpha = 0.01, epoch = 10):
-        acc =[]
-        loss =[]
-        for j in range(epoch):
-            l = []
-            for i in range(len(self.layers)):
-                out = self.f_forward(np.asarray(self.layers[i]))
-                l.append(self.loss(out, Y[i]))
-                self.back_prop(np.asarray(l[i]), Y[i], alpha)
-            print("epochs:", j + 1, "======== acc:", (1-(sum(l)/len(self.layers)))*100)
-            acc.append((1-(sum(l)/len(self.layers)))*100)
-            loss.append(sum(l)/len(self.layers))
-        return(acc, loss, self.layers)
+            # Multiply the error by the input and again by the gradient of the Sigmoid curve.
+            # This means less confident weights are adjusted more.
+            # This means inputs, which are zero, do not cause changes to the weights.
+            adjustment = dot(inputs.T, error * self.__sigmoid_derivative(output))
+
+            # Adjust the weights.
+            for layer in self.synaptic_weights:
+                layer += learning_rate * adjustment
+
+        return output
