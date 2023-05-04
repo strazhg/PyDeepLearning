@@ -28,13 +28,13 @@ class DNN():
 
     # We train the neural network through a process of trial and error.
     # Adjusting the synaptic weights each time.
-    def train(self, training_set_inputs, number_of_training_iterations):
+    def train(self, training_set_inputs, training_set_outputs, number_of_training_iterations):
         for iteration in range(number_of_training_iterations):
             # Pass the training set through our neural network (a single neuron).
-            output = self.think(training_set_inputs, 0.01, training=True)
+            output = self.think(training_set_inputs, training_set_outputs, 0.01, training=True)
 
     # The neural network thinks.
-    def think(self, inputs, learning_rate : float, training : bool):
+    def think(self, inputs, outputs, learning_rate : float, training : bool):
         # Pass inputs through our neural network.
         output = self.__sigmoid(dot(inputs, self.synaptic_weights[0]))
         for i in range(1, len(self.synaptic_weights)):
@@ -43,7 +43,7 @@ class DNN():
         if training:
             # Calculate the error (The difference between the desired output
             # and the predicted output).
-            error = inputs - output
+            error = outputs - output
 
             # Multiply the error by the input and again by the gradient of the Sigmoid curve.
             # This means less confident weights are adjusted more.
