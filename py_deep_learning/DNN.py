@@ -48,7 +48,7 @@ class DNN():
             # Multiply the error by the input and again by the gradient of the Sigmoid curve.
             # This means less confident weights are adjusted more.
             # This means inputs, which are zero, do not cause changes to the weights.
-            adjustment = dot(inputs.T, error * self.__sigmoid_derivative(output))
+            adjustment = np.dot(inputs.T, error * self.__sigmoid_derivative(output))
 
             # Adjust the weights.
             for layer in self.synaptic_weights:
