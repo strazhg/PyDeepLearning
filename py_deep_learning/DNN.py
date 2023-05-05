@@ -1,11 +1,11 @@
-from numpy import exp, array, random, dot
+import numpy as np
 
 
 class DNN():
     def __init__(self):
         # Seed the random number generator, so it generates the same numbers
         # every time the program runs.
-        random.seed(1)
+        np.random.seed(1)
 
         # We model a single neuron, with 3 input connections and 1 output connection.
         # We assign random weights to a 3 x 1 matrix, with values in the range -1 to 1
@@ -13,12 +13,12 @@ class DNN():
         self.synaptic_weights = []
     
     def add(self, shape : tuple):
-        self.synaptic_weights.append(2 * random.random(shape) - 1)
+        self.synaptic_weights.append(2 * np.random.random(shape) - 1)
     # The Sigmoid function, which describes an S shaped curve.
     # We pass the weighted sum of the inputs through this function to
     # normalise them between 0 and 1.
-    def __sigmoid(self, x):
-        return 1 / (1 + exp(-x))
+    def __relu(self, x):
+        return np.maximum(0, x)
 
     # The derivative of the Sigmoid function.
     # This is the gradient of the Sigmoid curve.
@@ -36,9 +36,9 @@ class DNN():
     # The neural network thinks.
     def think(self, inputs, outputs, learning_rate : float, training : bool):
         # Pass inputs through our neural network.
-        output = self.__sigmoid(dot(inputs, self.synaptic_weights[0]))
+        output = self.__relu(np.dot(inputs, self.synaptic_weights[0]))
         for i in range(1, len(self.synaptic_weights)):
-            output = self.__sigmoid(dot(output, self.synaptic_weights[i]))
+            output = self.__relu(np.dot(output, self.synaptic_weights[i]))
         
         if training:
             # Calculate the error (The difference between the desired output
